@@ -1,0 +1,34 @@
+{
+	"name": "eru-site",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"author": "Yahiko",
+	"devDependencies": {
+		"react-scripts": "^3.0.1"
+	},
+	"dependencies": {
+		"node-fetch": "^2.6.0",
+		"query-string": "^6.5.0",
+		"react": "^16.8.6",
+		"react-cookies": "^0.1.1",
+		"react-dom": "^16.8.6",
+		"react-router-dom": "^5.0.0"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}

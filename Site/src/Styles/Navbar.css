@@ -1,0 +1,9 @@
+nav.navbar {
+	padding: 5px 0;
+}
+a.nav-link {
+	font-size: 20px;
+}
+a.navbar-brand {
+	font-size: 30px;
+}
