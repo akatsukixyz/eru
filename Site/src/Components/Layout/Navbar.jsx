@@ -32,6 +32,7 @@ export class Navbar extends Component {
 									<NavLink
 										className='nav-link'
 										activeClassName='active'
+										exact
 										to='/'>
 										Home
 									</NavLink>

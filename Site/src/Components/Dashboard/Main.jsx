@@ -11,17 +11,12 @@ import '../../Styles/Dashboard.css';
 import { Guild } from './Guild';
 
 export class Dashboard extends Component {
-	constructor() {
-		super();
-		this.state = {
-			guilds: []
-		};
-	}
+	state = {
+		guilds: []
+	};
 	async componentDidMount() {
 		const u = await user(this.props.token);
-		this.setState({
-			guilds: u.guilds
-		});
+		this.setState({ guilds: u.guilds });
 	}
 	render() {
 		document.title = 'Eru | Dashboard';

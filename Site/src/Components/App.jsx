@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import { Route, Redirect } from 'react-router-dom';
-// import { save, load, remove } from 'react-cookies';
 
 import { Navbar } from './Layout/Navbar';
 import { Dashboard } from './Dashboard/Main';
@@ -11,6 +10,7 @@ import { user } from '../Util/Fetching';
 import { query } from '../Util/Callback';
 import { Guild } from './Dashboard/Guild';
 import { MainStats } from './Stats/Main';
+import { Logout } from '../Util/Logout';
 
 export class App extends Component {
 	constructor() {
@@ -19,6 +19,7 @@ export class App extends Component {
 		this.state = {
 			account: 'Login',
 			loggedIn: false,
+			id: '',
 			token
 		};
 	}
@@ -27,13 +28,14 @@ export class App extends Component {
 			this.state.token || query(this.props.location.search).token
 		);
 		if ((x && !Object.keys(x).length) || !x)
-			return localStorage.removeItem('token');
-		const { tag, expiration, token } = x;
-		if (!tag || !expiration) return localStorage.removeItem('token');
-		if (expiration <= Date.now()) return localStorage.removeItem('token');
+			return Logout(this.state.token);
+		const { tag, expiration, token, id } = x;
+		if (!tag || !expiration) return Logout(token, id);
+		if (expiration <= Date.now()) return Logout(token, id);
 		this.setState({
 			account: tag,
 			loggedIn: true,
+			id,
 			token
 		});
 		localStorage.setItem('token', token);
@@ -60,37 +62,52 @@ export class App extends Component {
 					exact
 					path='/dashboard'
 					component={() => {
-						if (!this.state.token) {
-							localStorage.removeItem('token');
-							return <Redirect to='/login' />;
-						}
+						if (!this.state.token)
+							return Logout(
+								this.state.token,
+								this.state.id,
+								true
+							);
 						return <Dashboard token={this.state.token} />;
 					}}
 				/>
-				<Route
-					path='/dashboard/guild/:id'
-					component={({ match }) => {
-						if (!this.state.token) {
-							localStorage.removeItem('token');
-							return <Redirect to='/login' />;
-						}
-						return <Guild id={match.params.id} />;
-					}}
-				/>
+
 				<Route
 					exact
 					path='/logout'
 					render={() => {
 						if (this.state.token) {
-							localStorage.removeItem('token');
 							this.setState({
 								account: 'Login',
 								loggedIn: false,
+								id: undefined,
 								token: undefined
 							});
-							return <Redirect to='/' />;
+							return Logout(
+								this.state.token,
+								this.state.id,
+								false,
+								true
+							);
 						}
 						return <Redirect to='/login' />;
+					}}
+				/>
+				<Route
+					path='/dashboard/guild/:id/:route?'
+					component={({ match }) => {
+						if (!this.state.token)
+							return Logout(
+								this.state.token,
+								this.state.id,
+								true
+							);
+						return (
+							<Guild
+								id={match.params.id}
+								route={match.params.route}
+							/>
+						);
 					}}
 				/>
 			</>

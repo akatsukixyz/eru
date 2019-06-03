@@ -7,7 +7,6 @@ Bot/dist
 Site/node_modules
 Site/yarn.lock
 
-OAuth/yarn.lock
-OAuth/node_modules
-
 Trash
+
+.env

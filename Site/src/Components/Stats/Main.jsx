@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import fetch from 'node-fetch';
-
 export class MainStats extends Component {
 	state = {
 		usage: {
@@ -17,7 +15,7 @@ export class MainStats extends Component {
 	};
 	async componentDidMount() {
 		const { usage, shards, guilds, users } = await fetch(
-			'http://localhost:5005/usage'
+			`http://localhost:5005/usage`
 		).then(x => x.json());
 		this.setState({
 			usage,
@@ -29,38 +27,67 @@ export class MainStats extends Component {
 	render() {
 		return (
 			<>
-				<div class='jumbotron'>
-					<h1 class='display-3'>Hello, world!</h1>
-					<p class='lead'>
-						CPU Model: {this.state.usage.CPU}
-						<br />
-						CPU Usage: {this.state.usage.PERCENT}
-						<br />
-						Used RAM: {this.state.usage.USED}
-						<br />
-						Total RAM: {this.state.usage.TOTAL}
-						<br />
-						RAM Usage: {this.state.usage.MEM}
-						<br />
-						Shard Count: {this.state.shards.length}
-						<br />
-						Guild Count: {this.state.guilds}
-						<br />
-						User Count: {this.state.users}
-					</p>
-					<hr class='my-4' />
-					<p>
-						It uses utility classes for typography and spacing to
-						space content out within the larger container.
-					</p>
-					{/* <p class='lead'>
-						<a
-							class='btn btn-primary btn-lg'
-							href='#'
-							role='button'>
-							Learn more
-						</a>
-					</p> */}
+				<div
+					className='container'
+					style={{
+						paddingTop: '20px',
+						display: 'flex',
+						float: 'none',
+						verticalAlign: 'top',
+						justifyContent: 'spacing-between'
+					}}>
+					<div
+						className='card border-primary mb-3'
+						style={{ maxWidth: '20rem', margin: '1%' }}>
+						<div className='card-body'>
+							<h4 className='card-title'>CPU</h4>
+							<p className='card-text'>
+								Model: {this.state.usage.CPU}
+								<br />
+								Usage: {this.state.usage.PERCENT}
+							</p>
+						</div>
+					</div>
+					<div
+						className='card border-primary mb-3'
+						style={{ maxWidth: '20rem', margin: '1%' }}>
+						<div className='card-body'>
+							<h4 className='card-title'>Memory</h4>
+							<p className='card-text'>
+								Used: {this.state.usage.USED}
+								<br />
+								Total: {this.state.usage.TOTAL}
+								<br />
+								Usage: {this.state.usage.MEM}
+							</p>
+						</div>
+					</div>
+					<div
+						className='card border-primary mb-3'
+						style={{ maxWidth: '20rem', margin: '1%' }}>
+						<div className='card-body'>
+							<h4 className='card-title'>Shards</h4>
+							<p className='card-text'>
+								{this.state.shards.length}
+							</p>
+						</div>
+					</div>
+					<div
+						className='card border-primary mb-3'
+						style={{ maxWidth: '20rem', margin: '1%' }}>
+						<div className='card-body'>
+							<h4 className='card-title'>Guilds</h4>
+							<p className='card-text'>{this.state.guilds}</p>
+						</div>
+					</div>
+					<div
+						className='card border-primary mb-3'
+						style={{ maxWidth: '20rem', margin: '1%' }}>
+						<div className='card-body'>
+							<h4 className='card-title'>Users</h4>
+							<p className='card-text'>{this.state.users}</p>
+						</div>
+					</div>
 				</div>
 			</>
 		);
