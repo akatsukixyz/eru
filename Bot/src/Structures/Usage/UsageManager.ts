@@ -3,8 +3,8 @@ import * as util from 'node-os-utils';
 
 export interface ClientUsage {
 	CPU: string;
-	USED: number;
-	TOTAL: number;
+	USED: string;
+	TOTAL: string;
 	MEM: string;
 	PERCENT: string;
 }
@@ -15,17 +15,17 @@ export class UsageManager {
 		this.client = client;
 		this.current = {
 			CPU: '',
-			USED: 0,
-			TOTAL: 0,
+			USED: '',
+			TOTAL: '',
 			MEM: '',
 			PERCENT: ''
 		};
 	}
 	public async cycle() {
-		this.stats();
-		setInterval(this.stats, 3e5);
+		this.stats(this.client);
+		setInterval(() => this.stats(this.client), 3e5);
 	}
-	public async stats() {
+	public async stats(client: EruClient) {
 		const cpu = await util.cpu.usage();
 		const {
 			totalMemMb,
@@ -34,12 +34,12 @@ export class UsageManager {
 		const model = util.cpu.model();
 		this.current = {
 			CPU: model,
-			USED: usedMemMb,
-			TOTAL: totalMemMb,
-			MEM: ((usedMemMb / totalMemMb) * 100).toFixed(1),
+			USED: `${usedMemMb} MB`,
+			TOTAL: `${totalMemMb} MB`,
+			MEM: `${((usedMemMb / totalMemMb) * 100).toFixed(1)}%`,
 			PERCENT: `${cpu}%`
 		};
-		this.client.log.botInfo('Updated stats');
+		client.log.botInfo('Updated stats');
 	}
 	public get usage() {
 		return this.current;

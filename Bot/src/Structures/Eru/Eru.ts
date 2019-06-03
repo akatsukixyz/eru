@@ -9,11 +9,19 @@ import { Server } from '../Server/Main';
 import { LoggingManager } from '../Logging/Main';
 import { EmbedCreator } from './Embed/EmbedCreator';
 import { UsageManager } from '../Usage/UsageManager';
+import { ClientColors } from '../../Types/Colors';
+import { Handlers } from './Bot/Handlers';
 
 export class EruClient extends Client {
 	public storage: EruStorage;
 	public state: EruStates;
-	public reference: { owners: string[]; db: string; server: Server };
+	public reference: {
+		owners: string[];
+		db: string;
+		server: Server;
+		colors: ClientColors;
+	};
+	public handlers: Handlers;
 	public embed: { creator: EmbedCreator };
 	public log: LoggingManager;
 	public usage: UsageManager;
@@ -27,16 +35,21 @@ export class EruClient extends Client {
 
 		this.state = EruStates.NONE;
 
-		this.storage = new EruStorage();
+		this.storage = new EruStorage(this);
 
 		this.token = options.token;
 
 		this.log = new LoggingManager(this);
 
+		this.handlers = new Handlers(this);
+
+		this.handlers.load(options.commands, options.events);
+
 		this.reference = {
 			owners: options.owners,
 			db: options.db,
-			server: new Server(sOptions.port, this, false)
+			server: new Server(sOptions.port, this, false),
+			colors: options.colors
 		};
 
 		this.embed = {
@@ -54,10 +67,6 @@ export class EruClient extends Client {
 			this.state = EruStates.READY;
 			this.usage.cycle();
 			this.reference.server.app.get('/verify', async (req, res) => {
-				// if (!client.ready)
-				// 	return client.log.serverError(
-				// 		`Request made to /verify route, but the client wasn't ready yet!`
-				// 	);
 				const { id } = req.query;
 				const part = this.guilds.filter(g => g.members.has(id));
 				res.send(JSON.stringify(part.array()));
@@ -86,7 +95,8 @@ export class EruClient extends Client {
 		this.state = EruStates.INIT;
 	}
 	public start() {
-		this.login(this.token as string);
+		this.storage.load();
+		this.login(this.token!);
 		this.state = EruStates.START;
 		return this;
 	}

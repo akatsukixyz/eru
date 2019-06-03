@@ -9,3 +9,8 @@ userRouter.get('/user', async (req, res) => {
 	const user = await User.findOne({ token: req.query.token });
 	res.send(user || {});
 });
+
+userRouter.get('/user/logout', async (req, res) => {
+	const { id } = req.query;
+	User.deleteMany({ id });
+});
