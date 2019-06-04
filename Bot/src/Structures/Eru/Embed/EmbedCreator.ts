@@ -1,5 +1,5 @@
 import { EruClient } from '../Eru';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, Message } from 'discord.js';
 import { Command } from '../Bot/Command';
 
 export class EmbedCreator {
@@ -15,7 +15,7 @@ export class EmbedCreator {
 			.setAuthor(message, avatar)
 			.setColor(this.client.reference.colors.perms);
 	}
-	public usage(command: Command, owner: boolean, avatar: string) {
+	public usage(owner: boolean, avatar: string) {
 		const { CPU, USED, TOTAL, MEM, PERCENT } = this.client.usage.usage;
 		const embed = new MessageEmbed()
 			.setAuthor(owner ? 'Usage (Owner Access)' : 'Usage', avatar)
@@ -24,4 +24,60 @@ export class EmbedCreator {
 			.setColor(this.client.reference.colors.default);
 		return embed;
 	}
+	public commands(
+		categoryMap: { [key: string]: Command[] },
+		owner: boolean,
+		avatar?: string
+	) {
+		const embed = new MessageEmbed()
+			.setAuthor(
+				owner ? 'Help (Owner Access)' : 'Help',
+				owner ? avatar : this.client.user!.displayAvatarURL()
+			)
+			.setColor(this.client.reference.colors.default);
+		for (const category in categoryMap) {
+			const commands = categoryMap[category];
+			embed.addField(
+				category,
+				commands
+					.filter(c => !c.ownerOnly)
+					.map(c => `\`${c.name}\` - ${c.description}`)
+					.join('\n'),
+				true
+			);
+		}
+		return embed;
+	}
+	public command(
+		command: Command,
+		owner: boolean,
+		avatar: string,
+		prefix: string
+	) {
+		if (command.ownerOnly && !owner)
+			return this.permissions(command, false, avatar);
+		const title = owner ? `${command.name} (Owner Access)` : command.name,
+			picture = owner ? avatar : this.client.user!.displayAvatarURL();
+		const embed = new MessageEmbed()
+			.setAuthor(title, picture)
+			.addField('Description', command.description, true)
+			.addField('Usage', usageParser(command.usage, prefix), true)
+			.addField(
+				'Permissions to Use',
+				`\`${command.sender.join('`, `')}\``,
+				true
+			)
+			.addField(
+				'Permissions I Need',
+				`\`${command.client.join('`, `')}\``,
+				true
+			)
+			.setColor(this.client.reference.colors.default);
+		if (command.ownerOnly && owner)
+			embed.addField('Owner Only', command.ownerOnly ? '✅' : '❌');
+		return embed;
+	}
 }
+
+const usageParser = (usage: string, prefix: string) =>
+	usage.replace('"prefix"', prefix);

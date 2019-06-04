@@ -18,8 +18,10 @@ export class Guild extends Component {
 			return <Redirect to={`/dashboard/guild/${this.props.id}`} />;
 		return (
 			<>
-				<Paginator id={this.props.id} route={this.props.route} />
-				{this.content()}
+				<div className='container'>
+					<Paginator id={this.props.id} route={this.props.route} />
+					{this.content()}
+				</div>
 			</>
 		);
 	}

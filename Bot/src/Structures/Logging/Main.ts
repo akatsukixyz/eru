@@ -1,6 +1,7 @@
 import { EruClient } from '../Eru/Eru';
 
 export class LoggingManager {
+	b: any;
 	constructor(public client: EruClient) {
 		console.log('[MAIN] -> Logger initialized...');
 	}

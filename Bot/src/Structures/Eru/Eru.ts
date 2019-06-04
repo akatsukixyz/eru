@@ -65,6 +65,7 @@ export class EruClient extends Client {
 
 		this.on('ready', () => {
 			this.state = EruStates.READY;
+			this.log.botInfo('Ready!');
 			this.usage.cycle();
 			this.reference.server.app.get('/verify', async (req, res) => {
 				const { id } = req.query;

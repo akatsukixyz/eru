@@ -17,7 +17,7 @@ export class App extends Component {
 		super();
 		const token = localStorage.getItem('token');
 		this.state = {
-			account: 'Login',
+			account: localStorage.getItem('account') || 'Login',
 			loggedIn: false,
 			id: '',
 			token
@@ -39,6 +39,7 @@ export class App extends Component {
 			token
 		});
 		localStorage.setItem('token', token);
+		localStorage.setItem('account', tag);
 	}
 	render() {
 		return (

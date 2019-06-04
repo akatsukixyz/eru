@@ -11,11 +11,12 @@ export class Handlers {
 		this.commands = new Collection();
 		this.events = new Collection();
 	}
+	public isCommand(cmd: string) {
+		return this.commands.has(cmd);
+	}
 	public load(commands: Command[] | any, events: Event[] | any) {
-		for (const cmd of commands) {
-			const command: Command = new cmd();
+		for (const command of commands)
 			this.commands.set(command.name, command);
-		}
 
 		this.client.log.botInfo(
 			`${this.commands.size}/${commands.length} commands were loaded.`
@@ -41,7 +42,7 @@ export class Handlers {
 			.slice(prefix.length)
 			.split(/\s+/g);
 		const command = args.shift()!.toLowerCase();
-		if (!this.commands.has(command)) return;
+		if (!this.isCommand(command)) return;
 		this.commands
 			.get(command)!
 			.run(message.client as EruClient, message, args);

@@ -1,15 +1,41 @@
 import { PermissionResolvable, Message } from 'discord.js';
 import { EruClient } from '../Eru';
 
+export interface CommandOptions {
+	name: string;
+	description: string;
+	usage: string;
+	sender: PermissionResolvable[];
+	client: PermissionResolvable[];
+	category: string;
+	ownerOnly: boolean;
+}
+
 export abstract class Command {
-	constructor(
-		public name: string,
-		public usage: string,
-		public sender: PermissionResolvable[],
-		public client: PermissionResolvable[],
-		public ownerOnly: boolean
-	) {
-		Object.assign(this, { name, usage, sender, client, ownerOnly });
+	public name: string;
+	public description: string;
+	public usage: string;
+	public sender: PermissionResolvable[];
+	public client: PermissionResolvable[];
+	public category: string;
+	public ownerOnly: boolean;
+	public constructor(options: CommandOptions) {
+		const {
+			name,
+			description,
+			usage,
+			sender,
+			client,
+			category,
+			ownerOnly
+		} = options;
+		this.name = name;
+		this.description = description;
+		this.usage = usage;
+		this.sender = sender;
+		this.client = client;
+		this.category = category;
+		this.ownerOnly = ownerOnly;
 	}
 	public run(client: EruClient, message: Message, args: string[]) {
 		if (!client.ready)
