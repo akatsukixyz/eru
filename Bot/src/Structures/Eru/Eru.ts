@@ -11,6 +11,7 @@ import { EmbedCreator } from './Embed/EmbedCreator';
 import { UsageManager } from '../Usage/UsageManager';
 import { ClientColors } from '../../Types/Colors';
 import { Handlers } from './Bot/Handlers';
+import { Yumi } from '../Yumi';
 
 export class EruClient extends Client {
 	public storage: EruStorage;
@@ -25,6 +26,7 @@ export class EruClient extends Client {
 	public embed: { creator: EmbedCreator };
 	public log: LoggingManager;
 	public usage: UsageManager;
+	public music: Yumi;
 
 	constructor(
 		options: EruOptions,
@@ -44,6 +46,8 @@ export class EruClient extends Client {
 		this.handlers = new Handlers(this);
 
 		this.handlers.load(options.commands, options.events);
+
+		this.music = new Yumi(this);
 
 		this.reference = {
 			owners: options.owners,

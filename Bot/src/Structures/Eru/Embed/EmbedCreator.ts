@@ -77,6 +77,28 @@ export class EmbedCreator {
 			embed.addField('Owner Only', command.ownerOnly ? '✅' : '❌');
 		return embed;
 	}
+	public queued(
+		title: string,
+		thumbnail: string,
+		avatar: string,
+		tag: string
+	) {
+		return new MessageEmbed()
+			.setFooter(tag, avatar)
+			.setDescription(`Added ${title} to the Queue`)
+			.setImage(thumbnail);
+	}
+	public nowPlaying(
+		title: string,
+		thumbnail: string,
+		avatar: string,
+		tag: string
+	) {
+		return new MessageEmbed()
+			.setFooter(tag, avatar)
+			.setDescription(`Now Playing ${title}`)
+			.setImage(thumbnail);
+	}
 }
 
 const usageParser = (usage: string, prefix: string) =>

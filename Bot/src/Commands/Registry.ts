@@ -1,8 +1,9 @@
 import { Usage } from './Usage';
 import { Command } from '../Structures/Eru/Bot/Command';
 import { Help } from './Help';
+import { Play } from './Music/Play';
 
-const toExport = [Usage, Help].map(x => new x()) as Command[];
+const toExport = [Usage, Help, Play].map(x => new x()) as Command[];
 
 export default toExport;
 

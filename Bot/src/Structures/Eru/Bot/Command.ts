@@ -38,11 +38,6 @@ export abstract class Command {
 		this.ownerOnly = ownerOnly;
 	}
 	public run(client: EruClient, message: Message, args: string[]) {
-		if (!client.ready)
-			return client.log.botError(
-				`Command was triggered when bot wasn't ready.`
-			);
-
 		if (
 			this.ownerOnly &&
 			!client.reference.owners.includes(message.author!.id)
